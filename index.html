@@ -7,21 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rent Linkedin By Blass</title>
-    <script src="https://cdn.tailwindcss.com/">
-
-// --- Tambahan fungsi masker ---
-function maskEmail(email) {
-    const [user, domain] = email.split("@");
-    if (!user || !domain) return email;
-    if (user.length <= 3) return user[0] + "***@" + domain;
-    return user.slice(0,3) + "***" + user.slice(-3) + "@" + domain;
-}
-function maskPhone(phone) {
-    if (!phone) return "";
-    if (phone.length <= 5) return phone;
-    return phone.slice(0,3) + "***" + phone.slice(-2);
-}
-</script>
+    <script src="https://cdn.tailwindcss.com/"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -532,7 +518,7 @@ function maskPhone(phone) {
                 row.innerHTML = `
                     <td class="py-3 px-4 break-words" data-label="Email">
                         <div class="flex items-center">
-                            <span>${maskEmail(item.email)}</span>
+                            <span>${item.email}</span>
                             <div class="blinking-light ${lightClass}"></div>
                         </div>
                     </td>
@@ -553,49 +539,43 @@ function maskPhone(phone) {
         }
     }
 
-    function filterAndRenderPublicView() {
-        const selectedStatus = statusFilterSelect.value;
-        const searchTerm = emailSearchInput.value.toLowerCase();
-        let dataToDisplay = [...currentData];
-        if (selectedStatus !== 'semua') {
-            dataToDisplay = dataToDisplay.filter(item => item.status === selectedStatus);
-        }
-        if (searchTerm) {
-            dataToDisplay = dataToDisplay.filter(item => item.email.toLowerCase().includes(searchTerm));
-        }
-        renderPublicTable(dataToDisplay);
-        clearSearchBtn.classList.toggle('hidden', searchTerm.length === 0);
-    }
-    
-    // Fungsi Render Tampilan Admin
-    function renderAdminSingleData() {
-        if (adminDisplayData && adminDisplayData.length > 0) {
-            const item = adminDisplayData[currentDataIndex];
+// Tambahin fungsi masker di atas
+function maskEmail(email) {
+    const [user, domain] = email.split("@");
+    if (!user || !domain) return email;
+    if (user.length <= 3) return user[0] + "***@" + domain;
+    return user.slice(0,3) + "***" + user.slice(-3) + "@" + domain;
+}
+
+function renderPublicTable(data) {
+    dataTableBody.innerHTML = '';
+    if (data && data.length > 0) {
+        data.forEach(item => {
             const lightClass = getLightClass(item.status);
-            dataCard.innerHTML = `
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Email:</span><div class="flex items-center"><span class="break-words text-right">${item.email}</span><div class="blinking-light ${lightClass}"></div></div></div>
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">No WhatsApp:</span><span class="break-words text-right">${item.whatsapp}</span></div>
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Tanggal Rental:</span><span class="break-words text-right">${item.rentalDate}</span></div>
-                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Status:</span><span class="break-words text-right">${item.status}</span></div>
-                </div>
-                <div class="flex space-x-2 mt-4 justify-end">
-                    <button class="editBtn bg-yellow-500 text-white py-1 px-3 rounded-md text-xs font-semibold hover:bg-yellow-600" data-id="${item.id}">Edit</button>
-                    <button class="deleteBtn bg-red-500 text-white py-1 px-3 rounded-md text-xs font-semibold hover:bg-red-600" data-id="${item.id}">Hapus</button>
-                </div>
+            const statusColorClass = getStatusTextColor(item.status);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-3 px-4 break-words" data-label="Email">
+                    <div class="flex items-center">
+                        <span>${maskEmail(item.email)}</span>
+                        <div class="blinking-light ${lightClass}"></div>
+                    </div>
+                </td>
+                <td class="py-3 px-4 break-words" data-label="Keterangan">
+                    <div>
+                        <span>${item.rentalDate}</span>
+                        <br>
+                        <span class="font-semibold ${statusColorClass}">${item.status}</span>
+                    </div>
+                </td>
             `;
-            document.querySelector('.editBtn').addEventListener('click', () => { playClickSound(); handleEdit(item.id); });
-            document.querySelector('.deleteBtn').addEventListener('click', () => { playClickSound(); handleDelete(item.id); });
-            dataIndexDisplay.textContent = `${currentDataIndex + 1} / ${adminDisplayData.length}`;
-            prevDataBtn.disabled = currentDataIndex === 0;
-            nextDataBtn.disabled = currentDataIndex === adminDisplayData.length - 1;
-        } else {
-            dataCard.innerHTML = `<p class="text-center py-4 text-gray-500">Tidak ada data untuk ditampilkan.</p>`;
-            dataIndexDisplay.textContent = '0 / 0';
-            prevDataBtn.disabled = true;
-            nextDataBtn.disabled = true;
-        }
-    }
+            dataTableBody.appendChild(row);
+        });
+    } else {
+        const noDataRow = document.createElement('tr');
+        noDataRow.innerHTML = `<td colspan="2" class="text-center py-4 text-gray-500">Tidak ada data yang cocok.</td>`;
+        dataTableBody.appendChild(noDataRow);
+    }       
     
     // --- Event Listeners ---
 
