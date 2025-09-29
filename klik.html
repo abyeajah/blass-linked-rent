@@ -537,17 +537,16 @@
         }
     }
 
-// Tambahin fungsi masker di atas
-	function maskEmail(email) 
-	{
+		// Fungsi masker email
+	function maskEmail(email) {
     const [user, domain] = email.split("@");
     if (!user || !domain) return email;
     if (user.length <= 3) return user[0] + "***@" + domain;
     return user.slice(0,3) + "***" + user.slice(-3) + "@" + domain;
-	}
+}
 
-	function renderPublicTable(data) 
-	{
+// Public Table pakai masker email
+function renderPublicTable(data) {
     dataTableBody.innerHTML = '';
     if (data && data.length > 0) {
         data.forEach(item => {
@@ -575,7 +574,15 @@
         const noDataRow = document.createElement('tr');
         noDataRow.innerHTML = `<td colspan="2" class="text-center py-4 text-gray-500">Tidak ada data yang cocok.</td>`;
         dataTableBody.appendChild(noDataRow);
-    }       
+    }
+}
+
+// Pastikan popup welcome bisa hilang
+continueBtn.addEventListener('click', () => {
+    welcomeModal.classList.add('hidden');
+    try { backgroundMusic.play(); } catch(e) {}
+});
+
     
     // --- Event Listeners ---
 
