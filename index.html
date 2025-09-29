@@ -507,7 +507,17 @@
         if (status === 'Running' || status === 'Unrestric' || status === 'running old') return 'text-green-600';
         return 'text-gray-600';
     }
+    // Tambahkan fungsi masking (letakkan di atas renderPublicTable)
+    function maskEmail(email) {
+        if (!email) return "";
+        let [name, domain] = email.split("@");
+        if (!domain || name.length <= 4) return email;
 
+        let start = name.slice(0, 2);
+        let end = name.slice(-3);
+        let masked = start + "*".repeat(name.length - (start.length + end.length)) + end;
+        return masked + "@" + domain;
+    }
     function renderPublicTable(data) {
         dataTableBody.innerHTML = '';
         if (data && data.length > 0) {
