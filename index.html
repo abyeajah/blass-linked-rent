@@ -528,7 +528,7 @@
                 row.innerHTML = `
                     <td class="py-3 px-4 break-words" data-label="Email">
                         <div class="flex items-center">
-                            <span>${item.email}</span>
+                            <span>${maskEmail(item.email)}</span>
                             <div class="blinking-light ${lightClass}"></div>
                         </div>
                     </td>
