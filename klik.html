@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<!-- Mirrored from data-rentbless.pages.dev/klik.mp3 by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 Sep 2025 10:05:30 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent Linkedin By Bless</title>
+    <script src="../cdn.tailwindcss.com/index.html"></script>
+    <link rel="preconnect" href="../fonts.googleapis.com/index.html">
+    <link rel="preconnect" href="../fonts.gstatic.com/index.html" crossorigin>
+    <link href="../fonts.googleapis.com/css2fb67.css?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .table-fixed-layout {
+            table-layout: fixed;
+        }
+
+        /* Responsive table CSS */
+        @media (max-width: 640px) {
+            #publicTable thead, #adminTable thead {
+                display: none;
+            }
+            #publicTable, #adminTable {
+                display: block;
+            }
+            #publicTable tbody, #adminTable tbody {
+                display: block;
+                width: 100%;
+            }
+            #publicTable tr, #adminTable tr {
+                display: block;
+                margin-bottom: 0.75rem;
+                border-radius: 0.5rem;
+                overflow: hidden;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            #publicTable td, #adminTable td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                position: relative;
+                text-align: right;
+                border-bottom-width: 1px;
+                border-bottom-color: #e5e7eb;
+            }
+            .dark #publicTable tr, .dark #adminTable tr {
+                background-color: #4b5563; /* Dark gray for dark mode */
+            }
+            .light #publicTable tr, .light #adminTable tr {
+                background-color: #fff; /* White for light mode */
+            }
+            #publicTable td::before, #adminTable td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                text-align: left;
+                flex-grow: 1;
+                padding-right: 1rem;
+            }
+            #publicTable td:last-child, #adminTable td:last-child {
+                border-bottom: none;
+            }
+            .dark #publicTable td, .dark #adminTable td {
+                border-bottom-color: #6b7280;
+            }
+        }
+        
+        /* Modal Backdrop */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        /* Modal Content */
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-width: 90%;
+            width: 400px;
+        }
+        .dark .modal-content {
+            background-color: #374151; /* Darker gray for dark mode */
+        }
+        
+        /* Blinking light animation */
+        @keyframes blink-green {
+            0%, 100% { background-color: #22c55e; }
+            50% { background-color: transparent; }
+        }
+
+        @keyframes blink-red {
+            0%, 100% { background-color: #ef4444; }
+            50% { background-color: transparent; }
+        }
+
+        .blinking-light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 8px;
+            flex-shrink: 0;
+        }
+
+        .blinking-light.green {
+            animation: blink-green 1s linear infinite;
+        }
+        
+        .blinking-light.red {
+            animation: blink-red 1s linear infinite;
+        }
+    </style>
+</head>
+<body id="appBody" class="bg-gray-100 text-gray-800 transition-colors duration-700">
+    <div id="contentContainer" class="max-w-4xl mx-auto rounded-xl p-6 md:p-8 transition-colors duration-700">
+        <h1 id="mainTitle" class="text-3xl font-bold text-center mb-6 text-current transition-colors duration-700">Rent Linkedin By Bless</h1>
+
+        <!-- Menu Yin-Yang -->
+        <div class="flex justify-center items-center mb-8">
+            <div id="menuContainer" class="bg-white p-1 rounded-full shadow-lg flex w-fit transition-all duration-700">
+                <button id="showTableBtn" class="font-semibold py-2 px-6 rounded-full transition-all duration-500 border-r-2 border-gray-200">
+                    Tabel
+                </button>
+                <button id="showAdminBtn" class="font-semibold py-2 px-6 rounded-full transition-all duration-500">
+                    Admin Mode
+                </button>
+            </div>
+        </div>
+
+        <!-- Notifikasi -->
+        <div id="notification" class="hidden fixed top-4 right-4 bg-green-500 text-white py-3 px-5 rounded-lg shadow-xl z-50 transition-transform duration-300 transform scale-0 origin-right">
+            Data berhasil disimpan!
+        </div>
+
+        <!-- Bagian Tabel (Public View) -->
+        <div id="tableView" class="space-y-4">
+            <!-- Search and Filter Controls -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                <!-- Search Bar -->
+                <div class="w-full sm:w-auto flex-grow">
+                    <div class="relative">
+                        <input type="text" id="emailSearchInput" placeholder="Cari email..." class="w-full pl-4 pr-10 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 transition-colors duration-700">
+                        <button id="clearSearchBtn" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414L8 8.586 6.707 7.293a1 1 0 10-1.414 1.414L6.586 10l-1.293 1.293a1 1 0 101.414 1.414L8 11.414l1.293 1.293a1 1 0 001.414-1.414L9.414 10l1.293-1.293z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <!-- Status Filter Dropdown -->
+                <div>
+                     <select id="statusFilterSelect" class="w-full sm:w-auto rounded-lg border text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 px-3">
+                        <option value="semua">Filter: Semua Status</option>
+                        <option value="Running">Running</option>
+                        <option value="Restric">Restric</option>
+                        <option value="Unrestric">Unrestric</option>
+                        <option value="running old">Old</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table id="publicTable" class="min-w-full rounded-lg table-auto transition-colors duration-700">
+                    <thead>
+                        <tr class="text-left text-sm text-current border-b border-gray-200 transition-colors duration-700">
+                            <th class="py-3 px-4 font-semibold">Email</th>
+                            <th class="py-3 px-4 font-semibold">Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody" class="divide-y divide-gray-200 text-sm">
+                        <!-- Data will be inserted by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="loadingIndicatorTable" class="text-center py-4 text-gray-500 hidden">
+                Mengambil data...
+            </div>
+        </div>
+
+        <!-- Detail Modal for Public View -->
+        <div id="detailModal" class="modal-backdrop hidden">
+            <div class="modal-content">
+                <button id="closeModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <h2 class="text-lg font-bold mb-4 text-current">Detail Data</h2>
+                <div id="modalContent" class="space-y-3 text-current">
+                    <!-- Detail data will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Welcome Pop-up Modal -->
+        <div id="welcomeModal" class="modal-backdrop">
+            <div class="modal-content text-center">
+                <h2 class="text-2xl font-bold mb-4">Selamat datang di Rent Linkedin by Bless</h2>
+                <p class="text-sm text-gray-600 mb-6">Indikator Merah = Restric, indikator Hijau = Akun Aman</p>
+                <audio id="backgroundMusic" src="music.html" preload="auto"></audio>
+                <button id="continueBtn" class="bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                    Lanjutkan
+                </button>
+            </div>
+        </div>
+
+        <!-- Bagian Admin Mode -->
+        <div id="adminView" class="hidden space-y-6">
+            <div id="passwordSection" class="bg-white rounded-lg shadow-inner p-6">
+                <label for="passwordInput" class="block font-medium mb-2 text-current">Masukkan Sandi Admin:</label>
+                <input type="password" id="passwordInput" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800">
+                <button id="submitPasswordBtn" class="mt-4 w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">Masuk</button>
+            </div>
+
+            <div id="adminFormSection" class="hidden space-y-6">
+                 <!-- Tombol Riwayat Hapus -->
+                 <div class="flex justify-end">
+                    <button id="showHistoryBtn" class="bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-600 transition duration-300">
+                        Riwayat Hapus
+                    </button>
+                </div>
+
+                <!-- Bagian Deteksi Email di Admin -->
+                <div id="adminEmailDetectionSection" class="bg-white rounded-lg shadow-inner p-4 transition-colors duration-700">
+                    <h3 class="font-semibold mb-2 text-current">Deteksi & Ubah Massal</h3>
+                    <p class="text-sm text-gray-500 mb-3">Tempel daftar email untuk memfilter atau mengubah statusnya.</p>
+                    <textarea id="adminEmailListInput" class="w-full h-24 p-2 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="contoh@email.com, contoh2@email.com"></textarea>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                        <select id="statusChangeSelect" class="w-full rounded-lg border text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 py-2 px-3">
+                            <option value="none">Hanya identifikasi (jangan ubah)</option>
+                            <option value="Running">Ubah status ke: Running</option>
+                            <option value="Restric">Ubah status ke: Restric</option>
+                            <option value="Unrestric">Ubah status ke: Unrestric</option>
+                            <option value="running old">Ubah status ke: Old</option>
+                        </select>
+                        <button id="adminCheckEmailsBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
+                            Lakukan Aksi
+                        </button>
+                    </div>
+                     <div class="mt-3">
+                        <button id="adminResetDetectionBtn" class="w-full bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-600 transition duration-300 hidden">
+                            Reset Filter & Tampilkan Semua
+                        </button>
+                    </div>
+                    <div id="adminDetectionResultSummary" class="mt-3 text-sm font-medium text-gray-700"></div>
+                </div>
+
+                <!-- Search Bar for Admin Mode -->
+                <div class="relative mb-4">
+                    <input type="text" id="adminEmailSearchInput" placeholder="Cari email..." class="w-full pl-4 pr-10 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 transition-colors duration-700">
+                    <button id="adminClearSearchBtn" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200 hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414L8 8.586 6.707 7.293a1 1 0 10-1.414 1.414L6.586 10l-1.293 1.293a1 1 0 101.414 1.414L8 11.414l1.293 1.293a1 1 0 001.414-1.414L9.414 10l1.293-1.293z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Single Data View with Navigation -->
+                <div id="singleDataView" class="bg-white rounded-lg shadow-md p-6 space-y-4">
+                    <div id="dataCard" class="space-y-3">
+                        <!-- Data akan dimasukkan di sini -->
+                    </div>
+                    <div class="flex justify-between items-center mt-4">
+                        <button id="prevDataBtn" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-400 disabled:opacity-50">Sebelumnya</button>
+                        <span id="dataIndexDisplay" class="font-bold text-sm"></span>
+                        <button id="nextDataBtn" class="bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-400 disabled:opacity-50">Berikutnya</button>
+                    </div>
+                </div>
+
+                <!-- Formulir Tambah/Edit Data -->
+                <div id="formContainer" class="bg-white rounded-lg shadow-inner p-6">
+                    <form id="addDataForm" class="space-y-4">
+                        <input type="hidden" id="dataIdInput">
+                        <div>
+                            <label for="emailInput" class="block text-sm font-medium text-current">Email:</label>
+                            <input type="email" id="emailInput" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 text-gray-800">
+                        </div>
+                        <div>
+                            <label for="whatsappInput" class="block text-sm font-medium text-current">No WhatsApp:</label>
+                            <input type="tel" id="whatsappInput" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 text-gray-800">
+                        </div>
+                        <div>
+                            <label for="rentalDateInput" class="block text-sm font-medium text-current">Tanggal Rental (Bact, Hari ke):</label>
+                            <input type="text" id="rentalDateInput" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 text-gray-800">
+                        </div>
+                        <div>
+                            <label for="statusInput" class="block text-sm font-medium text-current">Status:</label>
+                            <select id="statusInput" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 text-gray-800">
+                                <option value="Running">Running</option>
+                                <option value="Restric">Restric</option>
+                                <option value="Unrestric">Unrestric</option>
+                                <option value="running old">Old</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" id="submitDataBtn" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                                Tambah Data
+                            </button>
+                            <button type="button" id="cancelEditBtn" class="w-full bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300 hidden">
+                                Batal Edit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal-backdrop hidden">
+        <div class="modal-content text-center">
+            <h2 class="text-xl font-bold mb-4">Konfirmasi Hapus</h2>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus data ini secara permanen?</p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmDeleteBtn" class="bg-red-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-red-700 transition duration-300">
+                    Ya, Hapus
+                </button>
+                <button id="cancelDeleteBtn" class="bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-400 transition duration-300">
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Status Change Confirmation Modal -->
+    <div id="statusChangeConfirmModal" class="modal-backdrop hidden">
+        <div class="modal-content text-center">
+            <h2 class="text-xl font-bold mb-4">Konfirmasi Perubahan Status</h2>
+            <p id="statusChangeConfirmText" class="text-gray-600 mb-6"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmStatusChangeBtn" class="bg-yellow-500 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-yellow-600 transition duration-300">
+                    Ya, Ubah
+                </button>
+                <button id="cancelStatusChangeBtn" class="bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-400 transition duration-300">
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Deletion History Modal -->
+    <div id="historyModal" class="modal-backdrop hidden">
+        <div class="modal-content !max-w-lg">
+             <button id="closeHistoryModalBtn" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-lg font-bold mb-4 text-current">Riwayat Hapus</h2>
+            <div id="historyContent" class="space-y-3 text-current max-h-96 overflow-y-auto">
+                <!-- History content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Konfigurasi JSONbin
+    const BIN_ID = '68ce54b5ae596e708ff4bdfa';
+    const API_KEY = '$2a$10$hu8PLIHdNBRBtH8yIkNqFeT9mgKBspcpO81rxOS37YzjTC42thdCy';
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    // Elemen DOM (Umum)
+    const appBody = document.getElementById('appBody');
+    const menuContainer = document.getElementById('menuContainer');
+    const showTableBtn = document.getElementById('showTableBtn');
+    const showAdminBtn = document.getElementById('showAdminBtn');
+    const notification = document.getElementById('notification');
+    const welcomeModal = document.getElementById('welcomeModal');
+    const continueBtn = document.getElementById('continueBtn');
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const clickSound = new Audio('klik.html'); 
+
+    // Elemen DOM (Tampilan Publik)
+    const tableView = document.getElementById('tableView');
+    const dataTableBody = document.getElementById('dataTableBody');
+    const loadingIndicatorTable = document.getElementById('loadingIndicatorTable');
+    const emailSearchInput = document.getElementById('emailSearchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const statusFilterSelect = document.getElementById('statusFilterSelect');
+    const detailModal = document.getElementById('detailModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Elemen DOM (Mode Admin)
+    const adminView = document.getElementById('adminView');
+    const passwordSection = document.getElementById('passwordSection');
+    const adminFormSection = document.getElementById('adminFormSection');
+    const passwordInput = document.getElementById('passwordInput');
+    const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+    const adminEmailSearchInput = document.getElementById('adminEmailSearchInput');
+    const adminClearSearchBtn = document.getElementById('adminClearSearchBtn');
+    const singleDataView = document.getElementById('singleDataView');
+    const dataCard = document.getElementById('dataCard');
+    const prevDataBtn = document.getElementById('prevDataBtn');
+    const nextDataBtn = document.getElementById('nextDataBtn');
+    const dataIndexDisplay = document.getElementById('dataIndexDisplay');
+    const formContainer = document.getElementById('formContainer');
+    const addDataForm = document.getElementById('addDataForm');
+    const dataIdInput = document.getElementById('dataIdInput');
+    const submitDataBtn = document.getElementById('submitDataBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+    // Elemen DOM (Deteksi Email Admin)
+    const adminEmailListInput = document.getElementById('adminEmailListInput');
+    const statusChangeSelect = document.getElementById('statusChangeSelect');
+    const adminCheckEmailsBtn = document.getElementById('adminCheckEmailsBtn');
+    const adminResetDetectionBtn = document.getElementById('adminResetDetectionBtn');
+    const adminDetectionResultSummary = document.getElementById('adminDetectionResultSummary');
+
+    // Elemen DOM (Hapus & Riwayat & Konfirmasi Status)
+    const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const statusChangeConfirmModal = document.getElementById('statusChangeConfirmModal');
+    const statusChangeConfirmText = document.getElementById('statusChangeConfirmText');
+    const confirmStatusChangeBtn = document.getElementById('confirmStatusChangeBtn');
+    const cancelStatusChangeBtn = document.getElementById('cancelStatusChangeBtn');
+    const showHistoryBtn = document.getElementById('showHistoryBtn');
+    const historyModal = document.getElementById('historyModal');
+    const closeHistoryModalBtn = document.getElementById('closeHistoryModalBtn');
+    const historyContent = document.getElementById('historyContent');
+    
+    // State Aplikasi
+    let currentData = [];
+    let adminDisplayData = []; 
+    let currentDataIndex = 0;
+    let recentlyDeleted = [];
+    let dataToDeleteId = null;
+    let undoInterval;
+    let massUpdatePayload = { emails: [], newStatus: '' };
+
+    // Fungsi utilitas
+    function playClickSound() {
+        clickSound.currentTime = 0;
+        clickSound.play();
+    }
+
+    function showNotification(message, isError = false) {
+        notification.textContent = message;
+        notification.classList.remove('hidden', 'bg-green-500', 'bg-red-500');
+        notification.classList.add(isError ? 'bg-red-500' : 'bg-green-500');
+        notification.classList.add('scale-100');
+        setTimeout(() => {
+            notification.classList.remove('scale-100');
+            notification.classList.add('scale-0');
+            setTimeout(() => notification.classList.add('hidden'), 300);
+        }, 3000);
+    }
+
+    // Fungsi API
+    async function fetchBinData() {
+        loadingIndicatorTable.classList.remove('hidden');
+        try {
+            const response = await fetch(`${JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': API_KEY } });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            currentData = Array.isArray(data.record) ? data.record : (data.record.users || []);
+            currentData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        } catch (error) {
+            console.error("Gagal mengambil data:", error);
+            currentData = [];
+        } finally {
+            loadingIndicatorTable.classList.add('hidden');
+        }
+    }
+
+    async function updateBinData(newArray) {
+        try {
+            const bodyData = Array.isArray(newArray) ? newArray : { users: newArray };
+            const response = await fetch(JSONBIN_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+                body: JSON.stringify(bodyData)
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error("Gagal memperbarui data:", error);
+            return null;
+        }
+    }
+
+    // Fungsi Render Tampilan Publik
+    function getLightClass(status) {
+        if (status === 'Restric') return 'red';
+        if (status === 'Running' || status === 'Unrestric' || status === 'running old') return 'green';
+        return '';
+    }
+
+    function getStatusTextColor(status) {
+        if (status === 'Restric') return 'text-red-600';
+        if (status === 'Running' || status === 'Unrestric' || status === 'running old') return 'text-green-600';
+        return 'text-gray-600';
+    }
+
+    function renderPublicTable(data) {
+        dataTableBody.innerHTML = '';
+        if (data && data.length > 0) {
+            data.forEach(item => {
+                const lightClass = getLightClass(item.status);
+                const statusColorClass = getStatusTextColor(item.status);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-3 px-4 break-words" data-label="Email">
+                        <div class="flex items-center">
+                            <span>${item.email}</span>
+                            <div class="blinking-light ${lightClass}"></div>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 break-words" data-label="Keterangan">
+                        <div>
+                            <span>${item.rentalDate}</span>
+                            <br>
+                            <span class="font-semibold ${statusColorClass}">${item.status}</span>
+                        </div>
+                    </td>
+                `;
+                dataTableBody.appendChild(row);
+            });
+        } else {
+            const noDataRow = document.createElement('tr');
+            noDataRow.innerHTML = `<td colspan="2" class="text-center py-4 text-gray-500">Tidak ada data yang cocok.</td>`;
+            dataTableBody.appendChild(noDataRow);
+        }
+    }
+
+    function filterAndRenderPublicView() {
+        const selectedStatus = statusFilterSelect.value;
+        const searchTerm = emailSearchInput.value.toLowerCase();
+        let dataToDisplay = [...currentData];
+        if (selectedStatus !== 'semua') {
+            dataToDisplay = dataToDisplay.filter(item => item.status === selectedStatus);
+        }
+        if (searchTerm) {
+            dataToDisplay = dataToDisplay.filter(item => item.email.toLowerCase().includes(searchTerm));
+        }
+        renderPublicTable(dataToDisplay);
+        clearSearchBtn.classList.toggle('hidden', searchTerm.length === 0);
+    }
+    
+    // Fungsi Render Tampilan Admin
+    function renderAdminSingleData() {
+        if (adminDisplayData && adminDisplayData.length > 0) {
+            const item = adminDisplayData[currentDataIndex];
+            const lightClass = getLightClass(item.status);
+            dataCard.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Email:</span><div class="flex items-center"><span class="break-words text-right">${item.email}</span><div class="blinking-light ${lightClass}"></div></div></div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">No WhatsApp:</span><span class="break-words text-right">${item.whatsapp}</span></div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Tanggal Rental:</span><span class="break-words text-right">${item.rentalDate}</span></div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200"><span class="font-bold">Status:</span><span class="break-words text-right">${item.status}</span></div>
+                </div>
+                <div class="flex space-x-2 mt-4 justify-end">
+                    <button class="editBtn bg-yellow-500 text-white py-1 px-3 rounded-md text-xs font-semibold hover:bg-yellow-600" data-id="${item.id}">Edit</button>
+                    <button class="deleteBtn bg-red-500 text-white py-1 px-3 rounded-md text-xs font-semibold hover:bg-red-600" data-id="${item.id}">Hapus</button>
+                </div>
+            `;
+            document.querySelector('.editBtn').addEventListener('click', () => { playClickSound(); handleEdit(item.id); });
+            document.querySelector('.deleteBtn').addEventListener('click', () => { playClickSound(); handleDelete(item.id); });
+            dataIndexDisplay.textContent = `${currentDataIndex + 1} / ${adminDisplayData.length}`;
+            prevDataBtn.disabled = currentDataIndex === 0;
+            nextDataBtn.disabled = currentDataIndex === adminDisplayData.length - 1;
+        } else {
+            dataCard.innerHTML = `<p class="text-center py-4 text-gray-500">Tidak ada data untuk ditampilkan.</p>`;
+            dataIndexDisplay.textContent = '0 / 0';
+            prevDataBtn.disabled = true;
+            nextDataBtn.disabled = true;
+        }
+    }
+    
+    // --- Event Listeners ---
+
+    // Navigasi Utama
+    showTableBtn.addEventListener('click', () => {
+        playClickSound();
+        switchMode(false);
+        fetchBinData().then(() => filterAndRenderPublicView());
+    });
+
+    showAdminBtn.addEventListener('click', () => {
+        playClickSound();
+        switchMode(true);
+        if (!adminFormSection.classList.contains('hidden')) {
+            fetchBinData().then(() => {
+                adminDisplayData = [...currentData];
+                renderAdminSingleData();
+            });
+        }
+    });
+    
+    // Tampilan Publik
+    emailSearchInput.addEventListener('keyup', filterAndRenderPublicView);
+    statusFilterSelect.addEventListener('change', () => { playClickSound(); filterAndRenderPublicView(); });
+    clearSearchBtn.addEventListener('click', () => {
+        playClickSound();
+        emailSearchInput.value = '';
+        filterAndRenderPublicView();
+    });
+    closeModalBtn.addEventListener('click', () => { playClickSound(); detailModal.classList.add('hidden'); });
+
+    // Mode Admin
+    submitPasswordBtn.addEventListener('click', () => {
+        playClickSound();
+        if (passwordInput.value === "Desember68") {
+            passwordSection.classList.add('hidden');
+            adminFormSection.classList.remove('hidden');
+            fetchBinData().then(() => {
+                currentDataIndex = 0;
+                adminDisplayData = [...currentData];
+                renderAdminSingleData();
+            });
+        } else {
+            showNotification("Sandi salah!", true);
+        }
+    });
+    
+    // Navigasi Admin
+    prevDataBtn.addEventListener('click', () => {
+        playClickSound();
+        if (currentDataIndex > 0) {
+            currentDataIndex--;
+            renderAdminSingleData();
+        }
+    });
+
+    nextDataBtn.addEventListener('click', () => {
+        playClickSound();
+        if (currentDataIndex < adminDisplayData.length - 1) {
+            currentDataIndex++;
+            renderAdminSingleData();
+        }
+    });
+    
+    // Pencarian Admin
+    adminEmailSearchInput.addEventListener('keyup', () => {
+        const searchTerm = adminEmailSearchInput.value.toLowerCase();
+        adminDisplayData = currentData.filter(item => item.email.toLowerCase().includes(searchTerm));
+        currentDataIndex = 0;
+        renderAdminSingleData();
+        adminClearSearchBtn.classList.toggle('hidden', searchTerm.length === 0);
+    });
+
+    adminClearSearchBtn.addEventListener('click', () => {
+        playClickSound();
+        adminEmailSearchInput.value = '';
+        adminDisplayData = [...currentData];
+        currentDataIndex = 0;
+        renderAdminSingleData();
+        adminClearSearchBtn.classList.add('hidden');
+    });
+
+    // Deteksi Email Admin & Ubah Massal
+    adminCheckEmailsBtn.addEventListener('click', () => {
+        playClickSound();
+        const rawEmailList = adminEmailListInput.value;
+        const newStatus = statusChangeSelect.value;
+
+        if (!rawEmailList.trim()) {
+            showNotification("Silakan masukkan daftar email.", true);
+            return;
+        }
+        const inputEmails = [...new Set(rawEmailList.replace(/,/g, '\n').replace(/\s+/g, '\n').split('\n').map(e => e.trim().toLowerCase()).filter(e => e && e.includes('@')))];
+        if (inputEmails.length === 0) {
+            showNotification("Tidak ada email valid yang ditemukan.", true);
+            return;
+        }
+        
+        const foundData = currentData.filter(item => inputEmails.includes(item.email.toLowerCase()));
+        
+        adminDisplayData = foundData;
+        currentDataIndex = 0;
+        renderAdminSingleData();
+        adminResetDetectionBtn.classList.remove('hidden');
+        
+        const summaryText = `Ditemukan <span class="font-bold text-green-600">${foundData.length}</span> dari <span class="font-bold">${inputEmails.length}</span> email.`;
+        adminDetectionResultSummary.innerHTML = summaryText;
+
+        if (newStatus !== 'none' && foundData.length > 0) {
+            massUpdatePayload = {
+                emails: foundData.map(item => item.email.toLowerCase()),
+                newStatus: newStatus
+            };
+            statusChangeConfirmText.innerHTML = `Anda yakin ingin mengubah status <span class="font-bold">${foundData.length}</span> email yang ditemukan menjadi <span class="font-bold">${newStatus}</span>?`;
+            statusChangeConfirmModal.classList.remove('hidden');
+        } else if (newStatus !== 'none' && foundData.length === 0) {
+            showNotification("Tidak ada email yang cocok untuk diubah statusnya.", true);
+        }
+    });
+
+    confirmStatusChangeBtn.addEventListener('click', async () => {
+        playClickSound();
+        const { emails, newStatus } = massUpdatePayload;
+        
+        let changesCount = 0;
+        const updatedData = currentData.map(item => {
+            if (emails.includes(item.email.toLowerCase())) {
+                if (item.status !== newStatus) {
+                    changesCount++;
+                    return { ...item, status: newStatus, timestamp: Date.now() };
+                }
+            }
+            return item;
+        });
+
+        if (changesCount === 0) {
+            showNotification("Status semua email yang ditemukan sudah sama dengan status target.", false);
+            statusChangeConfirmModal.classList.add('hidden');
+            return;
+        }
+
+        const result = await updateBinData(updatedData);
+        if (result) {
+            showNotification(`${changesCount} data berhasil diperbarui statusnya!`);
+            currentData = updatedData;
+            // Refresh display data with the new statuses
+            adminDisplayData = currentData.filter(item => emails.includes(item.email.toLowerCase()));
+            currentDataIndex = 0;
+            renderAdminSingleData();
+        } else {
+            showNotification("Gagal memperbarui data.", true);
+        }
+        statusChangeConfirmModal.classList.add('hidden');
+    });
+
+    cancelStatusChangeBtn.addEventListener('click', () => {
+        playClickSound();
+        statusChangeConfirmModal.classList.add('hidden');
+    });
+    
+    adminResetDetectionBtn.addEventListener('click', () => {
+        playClickSound();
+        adminDisplayData = [...currentData];
+        currentDataIndex = 0;
+        renderAdminSingleData();
+        adminEmailListInput.value = '';
+        adminDetectionResultSummary.textContent = '';
+        statusChangeSelect.value = 'none';
+        adminResetDetectionBtn.classList.add('hidden');
+    });
+
+    // CRUD & Riwayat
+    function handleEdit(id) {
+        const item = currentData.find(i => i.id === id);
+        if (item) {
+            document.getElementById('emailInput').value = item.email;
+            document.getElementById('whatsappInput').value = item.whatsapp;
+            document.getElementById('rentalDateInput').value = item.rentalDate;
+            document.getElementById('statusInput').value = item.status;
+            dataIdInput.value = item.id;
+            submitDataBtn.textContent = 'Simpan Perubahan';
+            cancelEditBtn.classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function handleDelete(id) {
+        dataToDeleteId = id;
+        deleteConfirmModal.classList.remove('hidden');
+    }
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        playClickSound();
+        const itemToDelete = currentData.find(item => item.id === dataToDeleteId);
+        if (itemToDelete) {
+            recentlyDeleted.unshift({ ...itemToDelete, deletedAt: Date.now() });
+            const updatedData = currentData.filter(item => item.id !== dataToDeleteId);
+            const result = await updateBinData(updatedData);
+            if (result) {
+                showNotification("Data berhasil dihapus!");
+                currentData = updatedData;
+                adminDisplayData = adminDisplayData.filter(item => item.id !== dataToDeleteId);
+                if (currentDataIndex >= adminDisplayData.length && currentDataIndex > 0) currentDataIndex--;
+                renderAdminSingleData();
+            } else {
+                showNotification("Gagal menghapus data.", true);
+                recentlyDeleted = recentlyDeleted.filter(item => item.id !== dataToDeleteId);
+            }
+        }
+        deleteConfirmModal.classList.add('hidden');
+        dataToDeleteId = null;
+    });
+
+    cancelDeleteBtn.addEventListener('click', () => { playClickSound(); deleteConfirmModal.classList.add('hidden'); dataToDeleteId = null; });
+    cancelEditBtn.addEventListener('click', () => { playClickSound(); resetFormAndMode(); });
+
+    function resetFormAndMode() {
+        addDataForm.reset();
+        dataIdInput.value = '';
+        submitDataBtn.textContent = 'Tambah Data';
+        cancelEditBtn.classList.add('hidden');
+    }
+
+    addDataForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        playClickSound();
+        const isEditing = dataIdInput.value !== '';
+        let updatedData;
+        if (isEditing) {
+            updatedData = currentData.map(item => item.id === dataIdInput.value ? {
+                ...item, email: emailInput.value, whatsapp: whatsappInput.value, rentalDate: rentalDateInput.value, status: statusInput.value, timestamp: Date.now()
+            } : item);
+        } else {
+            updatedData = [{ id: crypto.randomUUID(), email: emailInput.value, whatsapp: whatsappInput.value, rentalDate: rentalDateInput.value, status: statusInput.value, timestamp: Date.now() }, ...currentData];
+        }
+        const result = await updateBinData(updatedData);
+        if (result) {
+            showNotification(isEditing ? "Data berhasil diperbarui!" : "Data berhasil ditambahkan!");
+            await fetchBinData();
+            adminDisplayData = [...currentData];
+            currentDataIndex = 0;
+            renderAdminSingleData();
+            resetFormAndMode();
+        } else {
+            showNotification("Gagal menyimpan data.", true);
+        }
+    });
+
+    function renderHistoryModal() {
+        historyContent.innerHTML = '';
+        if (recentlyDeleted.length === 0) {
+            historyContent.innerHTML = '<p class="text-gray-500 text-center">Tidak ada riwayat hapus.</p>';
+            return;
+        }
+        const now = Date.now();
+        const fiveMinutes = 5 * 60 * 1000;
+        recentlyDeleted.forEach(item => {
+            const timeElapsed = now - item.deletedAt;
+            const canUndo = timeElapsed < fiveMinutes;
+            const timeLeft = Math.ceil((fiveMinutes - timeElapsed) / 1000);
+            const historyItem = document.createElement('div');
+            historyItem.className = 'p-3 border rounded-lg bg-gray-50 flex justify-between items-center';
+            historyItem.innerHTML = `<div><p class="font-semibold text-sm break-all">${item.email}</p><p class="text-xs text-gray-500">Dihapus pada: ${new Date(item.deletedAt).toLocaleTimeString()}</p></div><button class="undoBtn text-white py-1 px-3 rounded-md text-xs font-semibold transition duration-300 ${canUndo ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'}" data-id="${item.id}" ${!canUndo ? 'disabled' : ''}>${canUndo ? `Urungkan (${timeLeft}s)` : 'Expired'}</button>`;
+            historyContent.appendChild(historyItem);
+        });
+        document.querySelectorAll('.undoBtn').forEach(btn => btn.addEventListener('click', (e) => handleUndo(e.target.dataset.id)));
+    }
+
+    async function handleUndo(id) {
+        playClickSound();
+        const itemToUndo = recentlyDeleted.find(item => item.id === id);
+        if (!itemToUndo) return;
+        recentlyDeleted = recentlyDeleted.filter(item => item.id !== id);
+        const { deletedAt, ...originalItem } = itemToUndo;
+        currentData.unshift(originalItem);
+        currentData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        const result = await updateBinData(currentData);
+        if (result) {
+            showNotification("Data berhasil dikembalikan!");
+            adminDisplayData = [...currentData];
+            renderAdminSingleData();
+            renderHistoryModal();
+        } else {
+            showNotification("Gagal mengembalikan data.", true);
+            recentlyDeleted.unshift(itemToUndo);
+            currentData = currentData.filter(item => item.id !== id);
+        }
+    }
+
+    showHistoryBtn.addEventListener('click', () => {
+        playClickSound(); renderHistoryModal(); historyModal.classList.remove('hidden');
+        clearInterval(undoInterval); undoInterval = setInterval(renderHistoryModal, 1000);
+    });
+    closeHistoryModalBtn.addEventListener('click', () => { playClickSound(); historyModal.classList.add('hidden'); clearInterval(undoInterval); });
+
+    function switchMode(isAdmin) {
+        if (isAdmin) {
+            showAdminBtn.classList.add('bg-slate-700', 'text-white'); showAdminBtn.classList.remove('text-slate-400');
+            showTableBtn.classList.remove('bg-slate-700', 'text-white'); showTableBtn.classList.add('text-slate-400');
+            tableView.classList.add('hidden'); adminView.classList.remove('hidden');
+        } else {
+            showTableBtn.classList.add('bg-slate-700', 'text-white'); showTableBtn.classList.remove('text-slate-400');
+            showAdminBtn.classList.remove('bg-slate-700', 'text-white'); showAdminBtn.classList.add('text-slate-400');
+            tableView.classList.remove('hidden'); adminView.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        welcomeModal.classList.remove('hidden');
+        continueBtn.addEventListener('click', () => {
+            playClickSound();
+            welcomeModal.classList.add('hidden');
+            try { backgroundMusic.play(); } catch(e) { console.log("Autoplay diblokir."); }
+            switchMode(false);
+            fetchBinData().then(() => filterAndRenderPublicView());
+        });
+    });
+</script>
+</body>
+
+<!-- Mirrored from data-rentbless.pages.dev/klik.mp3 by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 29 Sep 2025 10:05:30 GMT -->
+</html>
+
