@@ -546,7 +546,8 @@
     return user.slice(0,3) + "***" + user.slice(-3) + "@" + domain;
 	}
 
-	function renderPublicTable(data) {
+	function renderPublicTable(data) 
+	{
     dataTableBody.innerHTML = '';
     if (data && data.length > 0) {
         data.forEach(item => {
