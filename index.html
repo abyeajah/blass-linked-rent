@@ -107,7 +107,13 @@
         @keyframes blink-red {
             0%, 100% { background-color: #ef4444; }
             50% { background-color: transparent; }
+        }       
+        
+        @keyframes blink-black {
+            0%, 100% { background-color: #000; }
+            50% { background-color: transparent; }
         }
+
 
         .blinking-light {
             width: 10px;
@@ -124,6 +130,11 @@
         .blinking-light.red {
             animation: blink-red 1s linear infinite;
         }
+        
+        .blinking-light.black {
+            animation: blink-black 1s linear infinite;
+        }
+
     </style>
 </head>
 <body id="appBody" class="bg-gray-100 text-gray-800 transition-colors duration-700">
@@ -170,6 +181,7 @@
                         <option value="Restric">Restric</option>
                         <option value="Unrestric">Unrestric</option>
                         <option value="running old">Old</option>
+                        <option value="End Contract">End Contract</option>
                     </select>
                 </div>
             </div>
@@ -247,6 +259,7 @@
                             <option value="Restric">Ubah status ke: Restric</option>
                             <option value="Unrestric">Ubah status ke: Unrestric</option>
                             <option value="running old">Ubah status ke: Old</option>
+                            <option value="End Contract">Ubah status ke: End Contract</option>
                         </select>
                         <button id="adminCheckEmailsBtn" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
                             Lakukan Aksi
@@ -305,6 +318,7 @@
                                 <option value="Restric">Restric</option>
                                 <option value="Unrestric">Unrestric</option>
                                 <option value="running old">Old</option>
+                                <option value="End Contract">End Contract</option>
                             </select>
                         </div>
                         <div class="flex space-x-2">
@@ -499,12 +513,14 @@
     function getLightClass(status) {
         if (status === 'Restric') return 'red';
         if (status === 'Running' || status === 'Unrestric' || status === 'running old') return 'green';
+        if (status === 'End Contract') return 'black';
         return '';
     }
 
     function getStatusTextColor(status) {
         if (status === 'Restric') return 'text-red-600';
         if (status === 'Running' || status === 'Unrestric' || status === 'running old') return 'text-green-600';
+        if (status === 'End Contract') return 'text-black';
         return 'text-gray-600';
     }
     // Tambahkan fungsi masking (letakkan di atas renderPublicTable)
